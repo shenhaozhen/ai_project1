@@ -1,0 +1,42 @@
+.loader {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loader div {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #333;
+    border-radius: 50%;
+    animation: ellipsis-animation 1.4s infinite ease-in-out both;
+  }
+  
+  .loader div:nth-child(1) {
+    left: 0px;
+    animation-delay: -0.32s;
+  }
+  
+  .loader div:nth-child(2) {
+    left: 16px;
+    animation-delay: -0.16s;
+  }
+  
+  .loader div:nth-child(3) {
+    left: 32px;
+  }
+  
+  @keyframes ellipsis-animation {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
