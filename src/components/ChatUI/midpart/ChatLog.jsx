@@ -28,7 +28,7 @@ const ChatLog = () => {
             {
               chats.map((chat, index) => {
                   if (index == active) {
-                    return <div key={index} className="w-full min-h-[8%] bg-teal-200 rounded-[50px] flex flex-row justify-center items-center p-[2%]" onClick={() => handleSelect(index)}> 
+                    return <div key={index} className="w-full min-h-[8%] bg-teal-200  flex flex-row justify-center items-center p-[2%]" onClick={() => handleSelect(index)}> 
                            { chat?.length > 0 ? chat?.at(0)?.content : "New Chat"}
                             </div >
                   } else {

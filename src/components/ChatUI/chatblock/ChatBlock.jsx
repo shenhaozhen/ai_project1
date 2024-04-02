@@ -1,9 +1,9 @@
 import Message from "./Message"
 import {useState,useEffect, useRef} from "react"
-import { useChatStore, useActiveStore} from "../../../store/zustand"
-import { fetchFromOpenAI } from "../../../api/openai_api"
+import { useChatStore, useActiveStore, useAIModeStore} from "../../../store/zustand"
+import { fetchFromOpenAI, fetchSqlFromOpenAI } from "../../../api/openai_api"
 
-const ChatBlock = () => {
+const ChatBlock = ({database}) => {
 
 
     const submitURL = new URL('./assets/Submit.png', import.meta.url).href
@@ -13,11 +13,13 @@ const ChatBlock = () => {
 
     const chats = useChatStore(state => state.chats)
     const update = useChatStore(state => state.update)
-    const clear = useChatStore(state => state.clear)
+
 
     const active = useActiveStore(state => state.active)
 
-    const activeClear = useActiveStore(state => state.clear)
+    const mode = useAIModeStore(state => state.AIMode)
+
+
 
     useEffect(() => { 
        setMessages(chats[active])          
@@ -47,7 +49,11 @@ const ChatBlock = () => {
         let response = {role: 'loader', content: ''}
         setMessages(messages => [...messages, response])
         // Call API    
-        response = await fetchFromOpenAI(e.target[0].value) 
+        if(mode == 1){
+            response = await fetchSqlFromOpenAI(database,e.target[0].value)
+        } else {
+            response = await fetchFromOpenAI(e.target[0].value) 
+        }
         response = response.choices[0].message
         console.log(response)
         setMessages(messages => {

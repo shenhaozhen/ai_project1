@@ -9,7 +9,6 @@ const headers = {
 
 export const fetchFromOpenAI = async (userInput = "Hello, can you give me a random word?") => {
 
-
 const requestBody = {
     model: "gpt-3.5-turbo",
     messages: [{"role": "user", "content": `${userInput}`}],
@@ -32,3 +31,31 @@ const requestOptions =  {
     console.log(error);
   }
 };
+
+
+export const fetchSqlFromOpenAI = async (database = "", query="hello") => {
+  
+      const requestBody = {
+          model: "gpt-3.5-turbo",
+          messages: [{"role": "system", "content": `Given the following SQL tables, your job is to write queries given a user’s request.\n + ${database}`},
+                     {"role": "user", "content": `${query}`}],
+          temperature: 0.7,
+          max_tokens: 150,
+          top_p: 1,
+      };
+              
+      const requestOptions =  {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(requestBody)
+      };
+      
+        try {
+          const response = await fetch(url, requestOptions);
+          const data = await response.json();
+          console.log(data)
+          return data;
+        } catch (error) {
+          console.log(error);
+        }
+}

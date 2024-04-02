@@ -24,3 +24,10 @@ export const useActiveStore = create((set) => ({
     replace: (active) => set({ active }),
     clear: () => set({ active: 0 }),
 }))
+
+
+export const useAIModeStore = create((set) => ({
+    AIMode: 0,
+    setAIMode: (mode) => set({ AIMode: mode }),
+}))
+  

@@ -4,7 +4,9 @@ import { useDataStore } from "../../../store/zustand"
 
 const databaseList = ['countries']
 
-export const Database = () => {
+export const Database = ({databaseSchema}) => {
+
+  console.log(databaseSchema)
 
   const [database, setDatabase] = useState('') 
   const replace = useDataStore((state) => state.replace);
@@ -35,9 +37,8 @@ export const Database = () => {
             </select>
         </div>
 
-        <div className="grow bg-lime-300">
-
-
+        <div className="grow bg-lime-300 whitespace-pre overflow-auto">
+            {databaseSchema}
         </div>
 
         
