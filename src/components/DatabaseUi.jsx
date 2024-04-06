@@ -1,16 +1,42 @@
 import { useDataStore } from "../store/zustand"
 
-
-
-const fakeData = [{name: "John", age: 23}, {name: "Jane", age: 24}, {name: "Joe", age: 25}]
-
 const DatabaseUi = () => {
 
   const items = useDataStore(state => state.items)
+  let keys;
+  if (items.length > 0) {
+    keys = Object.keys(items[0])
+  }
 
   return (
-    <div className="h-[85%] w-[25%] bg-white flex flex-col-reverse">
-        <div className="grow bg-green-100 overflow-auto">
+    <div className="w-full overflow-auto bg-green-300">
+      <table className="w-full">
+        <thead>
+          <tr>
+            {keys?.map((key, index) => {
+              return <th key={index} className="border-[1px] border-black">{key}</th>
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {items?.map((item, index) => {
+            return (
+              <tr key={index}>
+                {keys?.map((key, index) => {
+                  return <td key={index} className="border-[1px] border-black">{item[key]}</td>
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export default DatabaseUi
+
+/*
          <ul className="h-full w-full">
           {items.map((item, index) => {
 
@@ -26,9 +52,4 @@ const DatabaseUi = () => {
             )
           })}
           </ul>
-        </div>
-    </div>
-  )
-}
-
-export default DatabaseUi
+*/

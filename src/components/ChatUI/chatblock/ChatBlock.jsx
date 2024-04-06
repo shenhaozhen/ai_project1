@@ -1,10 +1,13 @@
 import Message from "./Message"
 import {useState,useEffect, useRef} from "react"
-import { useChatStore, useActiveStore, useAIModeStore} from "../../../store/zustand"
-import { fetchFromOpenAI, fetchSqlFromOpenAI } from "../../../api/openai_api"
+import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore} from "../../../store/zustand"
+import { fetchFromOpenAI2 } from "../../../api/openai_api"
+import { sqlparser } from "../../../api/mysqlparser"
 
-const ChatBlock = ({database}) => {
+const sample_sql = "```sql\nSELECT id, name\nFROM public.countries\nWHERE name LIKE 'C%'\nLIMIT 3;\n```"
+const sample_sql2 = "```sql\nSELECT id, name\nFROM public.countries\nWHERE id > 100 AND id < 200 AND length(name) > 5\nORDER BY name\nLIMIT 5;\n```"
 
+const ChatBlock = () => {
 
     const submitURL = new URL('./assets/Submit.png', import.meta.url).href
 
@@ -18,6 +21,8 @@ const ChatBlock = ({database}) => {
     const active = useActiveStore(state => state.active)
 
     const mode = useAIModeStore(state => state.AIMode)
+
+    const database = useDatabaseStore(state => state.database)
 
 
 
@@ -35,12 +40,12 @@ const ChatBlock = ({database}) => {
         textarea.style.height = textarea.scrollHeight + "px";
     }
 
-    const generateUnqiueID = () => {
+    /*const generateUnqiueID = () => {
         const timeStamp = Date.now()
         const random = Math.random();
         const hexadecimalString = random.toString(16)
         return `id_${timeStamp}_${hexadecimalString}`
-    }
+    }*/
     
 
     const handleSumbit = async (e) => {
@@ -50,12 +55,14 @@ const ChatBlock = ({database}) => {
         setMessages(messages => [...messages, response])
         // Call API    
         if(mode == 1){
-            response = await fetchSqlFromOpenAI(database,e.target[0].value)
+            console.log(database.schema)
+            let sysMessage = database.schema == "" ? "" : 'Given the following SQL tables, your job is to write queries given a user’s request.\n' + database.schema;
+            response = await fetchFromOpenAI2(sysMessage,e.target[0].value,{temperature: 0.3, max_tokens: 150, top_p: 1,})
         } else {
-            response = await fetchFromOpenAI(e.target[0].value) 
-        }
-        response = response.choices[0].message
+            response = await fetchFromOpenAI2(e.target[0].value,{temperature: 0.7, max_tokens: 150}) 
+        }      
         console.log(response)
+        response = response.choices[0].message
         setMessages(messages => {
             let temp = [...messages]
             temp[temp.length - 1] = response

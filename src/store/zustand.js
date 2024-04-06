@@ -31,3 +31,7 @@ export const useAIModeStore = create((set) => ({
     setAIMode: (mode) => set({ AIMode: mode }),
 }))
   
+export const useDatabaseStore = create((set) => ({
+    database: {name: "", schema: ""},
+    setDatabase: (database) => set({ database }),
+}))
