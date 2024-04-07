@@ -52,3 +52,11 @@ export const useSettingStore = create((set) => ({
     setSetting: (setting) => set({ setting }),
     clear: () => set({ setting: {} }),
 }))
+
+
+// boolean - if true, send the file to ai for keywords / summary
+export const useSubmitFileStore = create((set) => ({
+    submitFile: false,
+    setSubmitFile: () => set({ submitFile: true }),
+    clear: () => set({ submitFile: false }),
+}))

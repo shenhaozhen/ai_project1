@@ -1,6 +1,6 @@
 import Message from "./Message"
 import {useState,useEffect, useRef} from "react"
-import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore} from "../../../store/zustand"
+import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore , useFileStore, useSubmitFileStore} from "../../../store/zustand"
 import { fetchFromOpenAI2 } from "../../../api/openai_api"
 
 const ChatBlock = () => {
@@ -19,6 +19,11 @@ const ChatBlock = () => {
 
     const database = useDatabaseStore(state => state.database)
 
+    const file = useFileStore(state => state.file)
+
+    const submitFile = useSubmitFileStore(state => state.submitFile)
+    const clearSubmitFile = useSubmitFileStore(state => state.clear)
+
     useEffect(() => { 
        setMessages(chats[active])          
     },[])
@@ -26,6 +31,16 @@ const ChatBlock = () => {
     useEffect(() => {
         update(messages,active)
     },[messages, active])
+
+    useEffect(() => {
+        if(submitFile && file !== ""){
+            handleFileSubmit()
+            clearSubmitFile()
+        } else {
+            console.log("no file or file should not be sent to openai")
+        }
+    },[submitFile])
+
 
     const handleInput = (e) => {
         const textarea = e.target;
@@ -61,6 +76,21 @@ const ChatBlock = () => {
         response = await requestFromOpenAI(userInput)
         response = response.choices[0].message
         console.log(response)
+        setMessages(messages => {
+            let temp = [...messages]
+            temp[temp.length - 1] = response
+            return [...temp]
+        })
+    }
+
+
+    const handleFileSubmit = async () => {
+        console.log("send file to openai")  
+        setMessages(messages => [...messages, {role: 'user', content: file}])
+        let response = {role: 'loader', content: ''}
+        setMessages(messages => [...messages, response])
+        response = await requestFromOpenAI(file)
+        response = response.choices[0].message
         setMessages(messages => {
             let temp = [...messages]
             temp[temp.length - 1] = response

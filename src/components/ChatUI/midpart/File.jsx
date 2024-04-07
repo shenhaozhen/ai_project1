@@ -1,11 +1,13 @@
 import { useState } from "react"
-import {useAIModeStore, useFileStore } from "../../../store/zustand";
+import {useAIModeStore, useFileStore, useSubmitFileStore } from "../../../store/zustand";
 
 
 const File = () => {
 
   const file = useFileStore(state => state.file)
   const setFile = useFileStore(state => state.setFile)
+
+  const setSubmitFile = useSubmitFileStore(state => state.setSubmitFile)
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -21,7 +23,7 @@ const File = () => {
  
 
   const handleSubmitClick = () => {
-    console.log(file);
+    setSubmitFile();
   };
 
   const handleClearClick = () => {
