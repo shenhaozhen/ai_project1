@@ -46,7 +46,7 @@ export const useFileStore = create((set) => ({
     clear: () => set({ file: "" }),
 }))
 
-// settings for ai options
+// ai request settings
 export const useSettingStore = create((set) => ({
     setting: {},
     setSetting: (setting) => set({ setting }),

@@ -1,6 +1,6 @@
 import Message from "./Message"
 import {useState,useEffect, useRef} from "react"
-import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore , useFileStore, useSubmitFileStore} from "../../../store/zustand"
+import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore , useFileStore, useSubmitFileStore, useSettingStore } from "../../../store/zustand"
 import { fetchFromOpenAI2 } from "../../../api/openai_api"
 
 const ChatBlock = () => {
@@ -23,6 +23,8 @@ const ChatBlock = () => {
 
     const submitFile = useSubmitFileStore(state => state.submitFile)
     const clearSubmitFile = useSubmitFileStore(state => state.clear)
+
+    const setting  = useSettingStore(state => state.setting);
 
     useEffect(() => { 
        setMessages(chats[active])          
@@ -51,18 +53,20 @@ const ChatBlock = () => {
 
     // replace if with switch
     const requestFromOpenAI = async (userInput) => {
+  
         let data;
         if(mode == 1){
             let sysMessage = database.schema == "" ? "" : 'Given the following SQL tables, your job is to write queries given a user’s request.\n' + database.schema;
-            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.3, max_tokens: 150, top_p: 1,})
+            data = await fetchFromOpenAI2(sysMessage,userInput,setting)
         } else if(mode == 2){
             let sysMessage = "You will be provided with a block of text, and your task is to extract a list of keywords from it."
-            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.7, max_tokens: 150, top_p: 1,})
+            data = await fetchFromOpenAI2(sysMessage,userInput,setting)
         } else if(mode == 3){ 
             let sysMessage = "You will be provided with a block of text, and your task is to create a summary from it by using 3 sentences."
-            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.7, max_tokens: 150, top_p: 1,})
-        }else {
-            data = await fetchFromOpenAI2(userInput,{temperature: 0.7, max_tokens: 150}) 
+            data = await fetchFromOpenAI2(sysMessage,userInput,setting)
+        }else {     
+            let sysMessage = ""
+            data = await fetchFromOpenAI2(sysMessage, userInput, setting) 
         } 
         return data
     }

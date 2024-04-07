@@ -16,7 +16,8 @@ const AIModes = () => {
   }
 
   return (
-    <div className="w-full h-full flex-wrap flex flex-row content-start place-content-center">
+    <div className="w-full h-full">
+    <div className="w-full h-[90%] flex-wrap flex flex-row content-start place-content-start">
       {
         modes.map((mode,index) => {
           return (
@@ -27,8 +28,8 @@ const AIModes = () => {
           )
         })
       }
-
-      <div className="mt-[5%]"> current ai mode is : {aimode }</div>
+      </div>
+      <p> current AI mode is : {aimode} </p>
     </div>
   )
 }

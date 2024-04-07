@@ -62,7 +62,7 @@ export const fetchSqlFromOpenAI = async (database = "", query="hello") => {
 }*/
 
 
-export const fetchFromOpenAI2 = async (sysMessage="", userMessgae="Hello, give me a random word please", options) => {
+export const fetchFromOpenAI2 = async (sysMessage="", userMessgae="Hello, give me a random word please", options={}) => {
 
     let messages = [];
     if (sysMessage !== "") {
