@@ -28,11 +28,11 @@ const ChatLog = () => {
             {
               chats.map((chat, index) => {
                   if (index == active) {
-                    return <div key={index} className="w-full min-h-[8%] bg-teal-200  flex flex-row justify-center items-center p-[2%]" onClick={() => handleSelect(index)}> 
+                    return <div key={index} className="w-full min-h-[8%] max-h-[10%] bg-teal-200  p-[2%] overflow-hidden text-ellipsis" onClick={() => handleSelect(index)}> 
                            { chat?.length > 0 ? chat?.at(0)?.content : "New Chat"}
                             </div >
                   } else {
-                    return <div key={index} className="w-full min-h-[8%] flex flex-row justify-center items-center" onClick={() => handleSelect(index)}> 
+                    return <div key={index} className="w-full min-h-[8%] max-h-[10%] p-[2%] overflow-hidden text-ellipsis" onClick={() => handleSelect(index)}> 
                            { chat?.length > 0 ? chat?.at(0)?.content : "New Chat"}
                            </div >
                   }

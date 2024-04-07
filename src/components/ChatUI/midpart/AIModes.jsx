@@ -1,7 +1,7 @@
 import { useAIModeStore } from "../../../store/zustand"
 
 const modes =
- [{mode: 0, name: '普通对话'}, {mode: 1, name: '数据库查询'}, {mode: 2, name: '生成关键字'}, {mode: 3, name: '文本摘要' }]
+ [{mode: 0, name: '普通对话'}, {mode: 1, name: '数据库查询'}, {mode: 2, name: '生成关键字'}, {mode: 3, name: '文本摘要' }, {mode: 4, name: '会议报告总结'}]
 
 const AIModes = () => {
 

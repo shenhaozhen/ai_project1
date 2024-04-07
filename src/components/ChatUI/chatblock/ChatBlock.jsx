@@ -2,10 +2,6 @@ import Message from "./Message"
 import {useState,useEffect, useRef} from "react"
 import { useChatStore, useActiveStore, useAIModeStore, useDatabaseStore} from "../../../store/zustand"
 import { fetchFromOpenAI2 } from "../../../api/openai_api"
-import { sqlparser } from "../../../api/mysqlparser"
-
-const sample_sql = "```sql\nSELECT id, name\nFROM public.countries\nWHERE name LIKE 'C%'\nLIMIT 3;\n```"
-const sample_sql2 = "```sql\nSELECT id, name\nFROM public.countries\nWHERE id > 100 AND id < 200 AND length(name) > 5\nORDER BY name\nLIMIT 5;\n```"
 
 const ChatBlock = () => {
 
@@ -17,14 +13,11 @@ const ChatBlock = () => {
     const chats = useChatStore(state => state.chats)
     const update = useChatStore(state => state.update)
 
-
     const active = useActiveStore(state => state.active)
 
     const mode = useAIModeStore(state => state.AIMode)
 
     const database = useDatabaseStore(state => state.database)
-
-
 
     useEffect(() => { 
        setMessages(chats[active])          
@@ -40,29 +33,34 @@ const ChatBlock = () => {
         textarea.style.height = textarea.scrollHeight + "px";
     }
 
-    /*const generateUnqiueID = () => {
-        const timeStamp = Date.now()
-        const random = Math.random();
-        const hexadecimalString = random.toString(16)
-        return `id_${timeStamp}_${hexadecimalString}`
-    }*/
-    
+
+    // replace if with switch
+    const requestFromOpenAI = async (userInput) => {
+        let data;
+        if(mode == 1){
+            let sysMessage = database.schema == "" ? "" : 'Given the following SQL tables, your job is to write queries given a user’s request.\n' + database.schema;
+            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.3, max_tokens: 150, top_p: 1,})
+        } else if(mode == 2){
+            let sysMessage = "You will be provided with a block of text, and your task is to extract a list of keywords from it."
+            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.7, max_tokens: 150, top_p: 1,})
+        } else if(mode == 3){ 
+            let sysMessage = "You will be provided with a block of text, and your task is to create a summary from it by using 3 sentences."
+            data = await fetchFromOpenAI2(sysMessage,userInput,{temperature: 0.7, max_tokens: 150, top_p: 1,})
+        }else {
+            data = await fetchFromOpenAI2(userInput,{temperature: 0.7, max_tokens: 150}) 
+        } 
+        return data
+    }
 
     const handleSumbit = async (e) => {
         e.preventDefault();
         setMessages(messages => [...messages, {role: 'user', content: e.target[0].value}])
         let response = {role: 'loader', content: ''}
         setMessages(messages => [...messages, response])
-        // Call API    
-        if(mode == 1){
-            console.log(database.schema)
-            let sysMessage = database.schema == "" ? "" : 'Given the following SQL tables, your job is to write queries given a user’s request.\n' + database.schema;
-            response = await fetchFromOpenAI2(sysMessage,e.target[0].value,{temperature: 0.3, max_tokens: 150, top_p: 1,})
-        } else {
-            response = await fetchFromOpenAI2(e.target[0].value,{temperature: 0.7, max_tokens: 150}) 
-        }      
-        console.log(response)
+        let userInput = e.target[0].value 
+        response = await requestFromOpenAI(userInput)
         response = response.choices[0].message
+        console.log(response)
         setMessages(messages => {
             let temp = [...messages]
             temp[temp.length - 1] = response
@@ -71,7 +69,7 @@ const ChatBlock = () => {
     }
 
     return (
-        <div className="w-full h-full flex flex-col-reverse justify-start pb-[10px] items-center">
+        <div className="w-full h-full flex flex-col-reverse justify-start pb-[10px] items-center overflow-auto">
             <div className="w-[90%]">
                 <form className="w-full flex flex-row justify-center" onSubmit={handleSumbit}> 
                     <textarea className="w-full rounded-l-2xl resize-none border-none outline-none text-[16px] block leading-loose p-[10px] bg-indigo-100 grow"  
@@ -90,3 +88,18 @@ const ChatBlock = () => {
 }
 
 export default ChatBlock
+
+// Call API    
+/*if(mode == 1){
+            console.log(database.schema)
+            let sysMessage = database.schema == "" ? "" : 'Given the following SQL tables, your job is to write queries given a user’s request.\n' + database.schema;
+            response = await fetchFromOpenAI2(sysMessage,e.target[0].value,{temperature: 0.3, max_tokens: 150, top_p: 1,})
+        } else if(mode == 2){
+            let sysMessage = "You will be provided with a block of text, and your task is to extract a list of keywords from it."
+            response = await fetchFromOpenAI2(sysMessage,e.target[0].value,{temperature: 0.7, max_tokens: 150, top_p: 1,})
+        } else if(mode == 3){ 
+            let sysMessage = "You will be provided with a block of text, and your task is to create a summary from it by using 3 sentences."
+            response = await fetchFromOpenAI2(sysMessage,e.target[0].value,{temperature: 0.7, max_tokens: 150, top_p: 1,})
+        }else {
+            response = await fetchFromOpenAI2(e.target[0].value,{temperature: 0.7, max_tokens: 150}) 
+        }*/     
