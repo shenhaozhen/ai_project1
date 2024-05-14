@@ -85,7 +85,6 @@ export const fetchFromOpenAI2 = async (sysMessage="", userMessgae="Hello, give m
     try {
       const response = await fetch(url, requestOptions);
       const data = await response.json();
-      console.log(data)
       return data;
     } catch (error) {
       console.log(error);
