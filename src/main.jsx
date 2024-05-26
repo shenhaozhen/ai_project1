@@ -6,6 +6,7 @@ import Huiyi1_1 from './pages/Huiyi1_1.jsx';
 import Huiyi1_2 from './pages/Huiyi1_2.jsx';
 import MP_1 from './pages/MP_1.jsx';
 import ZiXun from './pages/ZiXun.jsx';
+import CeHua from './pages/CeHua.jsx';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -37,7 +38,11 @@ const router = createBrowserRouter([
   {
     path: "form/huiyizixun",
     element: <ZiXun/>,
-  }
+  },
+  {
+    path: "form/cehua",
+    element: <CeHua/>,
+  },
 ]);
 
 

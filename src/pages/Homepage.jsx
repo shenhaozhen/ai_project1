@@ -21,7 +21,10 @@ const Homepage = () => {
           <div className={buttonStyle}>前往市场推广</div>
         </Link>
         <Link to="form/huiyizixun">
-          <div className={buttonStyle}>前往会议咨询</div>
+          <div className={buttonStyle}>前往市场咨询</div>
+        </Link>
+        <Link to="form/cehua">
+          <div className={buttonStyle}>前往市场策划</div>
         </Link>
       </div>
     </div>
