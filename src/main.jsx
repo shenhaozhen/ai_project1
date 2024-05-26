@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Huiyi1_1 from './pages/Huiyi1_1.jsx';
 import Huiyi1_2 from './pages/Huiyi1_2.jsx';
 import MP_1 from './pages/MP_1.jsx';
+import ZiXun from './pages/ZiXun.jsx';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "form/market_promotion_1",
     element: <MP_1/>,
+  },
+  {
+    path: "form/huiyizixun",
+    element: <ZiXun/>,
   }
 ]);
 

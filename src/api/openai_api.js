@@ -1,9 +1,11 @@
 const url = "https://api.chatgptid.net/v1/chat/completions"
+const newUrl = "https://api.xty.app/v1/chat/completions"
 const daodaoKey = import.meta.env.VITE_DAODAO_KEY
+const xtyKey = import.meta.env.VITE_XTY_KEY
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${daodaoKey}`
+    'Authorization': `Bearer ${xtyKey}`
 };
   
 
@@ -83,7 +85,7 @@ export const fetchFromOpenAI2 = async (sysMessage="", userMessgae="Hello, give m
     };
 
     try {
-      const response = await fetch(url, requestOptions);
+      const response = await fetch(newUrl, requestOptions);
       const data = await response.json();
       return data;
     } catch (error) {
